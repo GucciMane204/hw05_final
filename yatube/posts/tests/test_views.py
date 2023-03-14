@@ -231,20 +231,16 @@ class FollowTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Создаем автора поста
         cls.author = User.objects.create_user(username='author')
 
-        # Создаем фолловера, клиента под него и логинимся в этом клиенте
         cls.follower = User.objects.create_user(username='follower')
         cls.follower_client = Client()
         cls.follower_client.force_login(cls.follower)
 
-        # Создаем пользователя, клиента и логинимся в этом клиенте
         cls.user = User.objects.create_user(username='user')
         cls.user_client = Client()
         cls.user_client.force_login(cls.user)
 
-        # Создаем пост
         cls.post = Post.objects.create(
             author=cls.author, text='Текст для проверки ленты'
         )

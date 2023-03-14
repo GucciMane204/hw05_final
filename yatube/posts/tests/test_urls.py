@@ -10,30 +10,23 @@ class PostURLTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Создаем тестового пользователя
         cls.user = User.objects.create_user(username='user')
 
-        # Создаем тестового пользователя-автора
         cls.author = User.objects.create_user(username='Author')
 
-        # Создаём неавторизованный клиент
         cls.guest_client = Client()
 
-        # Создаём клиент для авторизации тестовым пользователем
         cls.authorized_client = Client()
         cls.authorized_client.force_login(cls.user)
 
-        # Создаём клиент для авторизации тестовым пользователем-автором
         cls.author_client = Client()
         cls.author_client.force_login(cls.author)
 
-        # Создаем тестовую группу
         cls.group = Group.objects.create(
             title="Тестовая группа",
             slug="Test_slag",
             description="Тестовое описание",
         )
-        # Создаем тестовый пост
         cls.post = Post.objects.create(
             text="Тестовый пост", author=cls.author, group=cls.group
         )
@@ -92,7 +85,6 @@ class PostURLTests(TestCase):
             ),
         }
 
-        # Доступные адресы для гостя
         cls.URLS_GUEST_ALLOWED = {
             'INDEX': cls.URLS_ALL_STARS['INDEX'],
             'GROUP': cls.URLS_ALL_STARS['GROUP'],
@@ -101,40 +93,31 @@ class PostURLTests(TestCase):
             'UNEXISTING': cls.URLS_ALL_STARS['UNEXISTING'],
         }
 
-        # Доступные адресы для авторизованного пользователя
         cls.URLS_AUTHORIZED_ALLOWED = {
             **cls.URLS_GUEST_ALLOWED,
             'POST_CREATE': cls.URLS_ALL_STARS['POST_CREATE'],
             'FOLLOW_INDEX': cls.URLS_ALL_STARS['FOLLOW_INDEX'],
         }
 
-        # Доступные адресы для автора
         cls.URLS_AUTHOR_ALLOWED = {
             **cls.URLS_AUTHORIZED_ALLOWED,
             'POST_EDIT': cls.URLS_ALL_STARS['POST_EDIT'],
         }
 
-        # Адресы, которые редиректят автора
-        # на страницу деталей поста
         cls.URLS_AUTHOR_REDIRECT_POST_DETAIL = {
             'POST_COMMENT': cls.URLS_ALL_STARS['POST_COMMENT'],
         }
 
-        # Адресы, которые редиректят авторизованного
-        # на страницу деталей поста
         cls.URLS_AUTHORIZED_REDIRECT_POST_DETAIL = {
             **cls.URLS_AUTHOR_REDIRECT_POST_DETAIL,
             'POST_EDIT': cls.URLS_ALL_STARS['POST_EDIT'],
         }
 
-        # Адресы, которые редиректят авторизованного
-        # на страницу профиля пользователя
         cls.URLS_AUTHORIZED_REDIRECT_PROFILE = {
             'FOLLOW': cls.URLS_ALL_STARS['FOLLOW'],
             'UNFOLLOW': cls.URLS_ALL_STARS['UNFOLLOW'],
         }
 
-        # Адресы, которые редиректят гостя на авторизацию
         cls.URLS_GUEST_REDIRECT_LOGIN = {
             **cls.URLS_AUTHORIZED_REDIRECT_POST_DETAIL,
             **cls.URLS_AUTHORIZED_REDIRECT_PROFILE,
